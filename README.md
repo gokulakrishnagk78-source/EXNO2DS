@@ -23,7 +23,68 @@ STEP 7: Use cross tabulation method to quantitatively analyze the relationship b
 STEP 8: Use heatmap method of representation to show relationships between two variables, one plotted on each axis.
 
 ## CODING AND OUTPUT
-        <<INCLUDE YOUR CODING AND OUTPUT SCREENSHOTS>>
+```
+        import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# RESULT
-        <<INCLUDE YOUR RESULT HERE>>
+df = pd.read_csv("C:\\Users\\krishna\\Downloads\\titanic_dataset (1).csv")
+
+df["Age"] = df["Age"].fillna(df["Age"].median())
+df["Fare"] = df["Fare"].fillna(df["Fare"].median())
+df["Embarked"] = df["Embarked"].fillna(df["Embarked"].mode()[0])
+
+plt.figure(figsize=(8, 6))
+sns.boxplot(data=df, x="Age")
+plt.title("Boxplot of Age")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(8, 6))
+sns.boxplot(data=df, x="Fare")
+plt.title("Boxplot of Fare")
+plt.tight_layout()
+plt.show()
+
+def remove_outliers(df, column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+    return df[(df[column] >= lower) & (df[column] <= upper)]
+
+df = remove_outliers(df, "Age")
+df = remove_outliers(df, "Fare")
+
+plt.figure(figsize=(8, 6))
+sns.countplot(data=df, x="Sex", hue="Survived", palette="Set2")
+plt.title("Survival Count by Gender")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(8, 6))
+sns.displot(data=df, x="Age", kde=True, bins=30, color="skyblue")
+plt.title("Age Distribution")
+plt.tight_layout()
+plt.show()
+
+cross_tab = pd.crosstab(df["Pclass"], df["Survived"])
+print(cross_tab)
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(cross_tab, annot=True, fmt="d", cmap="YlGnBu")
+plt.title("Survival by Class Heatmap")
+plt.tight_layout()
+plt.show()
+```
+#output:
+![Screenshot_17-10-2025_141149_localhost](https://github.com/user-attachments/assets/4b1cff97-f787-4e50-8ee2-7f8d8d166c06)
+![Screenshot_17-10-2025_141219_localhost](https://github.com/user-attachments/assets/650b19ec-c112-4c56-ab2f-b4fa997b1018)
+![Screenshot_17-10-2025_141159_localhost](https://github.com/user-attachments/assets/c4034387-e09a-44c1-af48-0faa316db39c)
+![Screenshot_17-10-2025_14128_localhost](https://github.com/user-attachments/assets/c4d8f009-b005-4481-a6ec-83df2db77775)
+![Screenshot_17-10-2025_141230_localhost](https://github.com/user-attachments/assets/149c3c88-a86b-47b3-b698-acbbc8601f98)
+
+# RESULT:
+exploratory data analysis for the given sample dataset is completed successfully
